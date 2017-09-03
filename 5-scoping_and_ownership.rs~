@@ -11,8 +11,6 @@ fn main(){
     print_from_reference(&str2);
     println!("printed str2 from str2: {}",str2);
 
-    println!("");
-
     let str3 = String::from("Third test String...");
     let str3_pointer = &str3 as *const String;
     println!("print the raw pointer to str3: {:?}",str3_pointer);
