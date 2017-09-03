@@ -78,4 +78,20 @@ fn main(){
     let FooBar { tuple: (a,b), number: c } = structure;             // this is the re-binding, the variables on the left-hand are assigned to the FooBar struct on the right-hand
     println!("the tuple is made of a: {} and b: {}",a,b);
     println!("the number is c: {}",c);
+
+
+
+
+
+    // match guards
+    // the guards are basically if-statements controlling the output of the match
+    // let tuple = (23,64);
+    // let tuple = (64,64);
+    let tuple = (42,9);
+
+    match tuple {
+        (a,b) if a == b => println!("both numbers are: {}",a),
+        (a,_) if a == 42 => println!("a is 42"),
+        _ => println!("the numbers are just numbers.")
+    };
 }
