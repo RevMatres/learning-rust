@@ -29,6 +29,16 @@ impl Elements {
 }
 
 // methods for tuples
+struct Tuple(u8,u8);
+impl Tuple {
+    fn new(a:u8,b:u8) -> Tuple {
+        Tuple(a,b)
+    }
+    fn product(&self) -> u8 {
+        self.0 * self.1
+    }
+}
+
 fn main(){
 
     let player_1 = Elements {fire: 24, water: 32, earth: 9, air: 255};
@@ -40,5 +50,10 @@ fn main(){
     player_2.print_elements();
 
     println!("");
-    println!("the answer: {}", Elements::what_do_you_get_if_you_multiply_9_by_6())
+    println!("the answer: {}", Elements::what_do_you_get_if_you_multiply_9_by_6());
+
+    println!("");
+
+    let numbers = Tuple::new(20,3);
+    println!("product: {}",numbers.product())
 }
