@@ -94,4 +94,16 @@ fn main(){
         (a,_) if a == 42 => println!("a is 42"),
         _ => println!("the numbers are just numbers.")
     };
+
+
+    // match bindings
+    // sometimes a binding can be necessary to make things work
+    let variable = 10;
+    match variable {
+        // here a range is used, there's no way to get the value of variable then
+        0 ... 50 => println!("variable is somewhere between 0 and 50!"),
+        // using an @ binding one can bind variable's value to n
+        n @ 50 ... 100 => println!("variable is {} and therefore lies between 50 and 100", n),
+        n => println!("the number isn't between 0 and 100 and it is: {}", n)
+    }
 }
