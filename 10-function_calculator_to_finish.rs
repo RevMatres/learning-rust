@@ -1,4 +1,4 @@
-type XY = (f32,f32);
+type Point = (f32,f32);
 
 fn main() {
 
@@ -8,7 +8,7 @@ fn main() {
     let step_size = 0.1 as f32;
 
     // necesseties
-    let mut output: Vec<XY> = Vec::new();
+    let mut output: Vec<Point> = Vec::new();
 
     // calculation
     calc(left_bound,right_bound,step_size,&mut output);
@@ -18,12 +18,16 @@ fn main() {
                                                 // output to some standard filename if not otherwise specified needs to occur
 }
 
-fn calc(left_bound:f32,right_bound:f32,step_size:f32,output: &mut Vec<XY>) {
+fn calc(left_bound:f32,right_bound:f32,step_size:f32,output: &mut Vec<Point>) {
     let mut x = left_bound;
     while x <= right_bound {
-        let y = x*2;                            // here goes the 'parsed' function
-        let result: XY = (x,y);
+        let y = f(x);                            // here goes the 'parsed' function
+        let result: Point = (x,y);
         output.push(result);
         x += step_size;
     }
+}
+
+fn f(x:f32) -> f32 {
+    2*x
 }
