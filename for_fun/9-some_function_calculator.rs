@@ -21,11 +21,15 @@ fn main() {
 fn square(start: f32, end: f32, step: f32, output_x: &mut Vec<f32>, output_y: &mut Vec<f32>) {
     let mut x: f32 = start;
     loop {
-        let result = x*x;
+        let result = f(x);
         output_x.push(x);
         output_y.push(result);
 
         x += step;
         if x >= end {break};
     }
+}
+
+fn f(x:f32) -> f32 {
+    x*x
 }
