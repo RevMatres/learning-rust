@@ -1,0 +1,2 @@
+# ignore compiled rust files!
+./second_run/playground/target/
