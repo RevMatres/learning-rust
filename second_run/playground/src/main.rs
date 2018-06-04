@@ -59,4 +59,35 @@ fn main() {
     // the values directly
 
     // this is stuff, you'll pick up over time…
+
+
+    // OWNERSHIP STUFF
+
+    // MOVE
+    // With non-primitive types you have the type's data [pointer, size, capacity, etc]
+    // on the stack and the actual information on the heap.
+    
+    let s1 = String::from("wheeeee");	// create a String-type with s1 as its owner
+    let s2 = s1				// create another variable that points to the heap
+
+    // In other languages this is called a shallow copy, because in them only the type's data
+    // is copied, which is why you end up with more than one pointer to the same place on the heap.
+    // In rust this doesn't happen, instead the type's data is MOVED, not SHALLOW COPIED.
+    // That means s1 is invalidated after s2 is assigned the type's data.
+    // That way you never have more than one OWNER and more than one data-set pointing to the same
+    // spot on the heap.
+    // A DEEP COPY would be a CLONE, where both the data and the heap-stuff is duplicated, creating
+    // a functional clone of the initial object.
+
+    // OWNERSHIP AND BORROWS AND POINTERS
+    // In rust a variable has only one owner.
+    // You can borrow the variable to a different scope via a share-pointer [&var],
+    // in which case both the owner and the other scope can read the variable, but neither
+    // can edit/mutate it.
+    // You can offer up one mutable borrow to a scope via a mutable-share-pointer [&mut var],
+    // in which case the owner can't edit the variable anymore, and only the owner of the
+    // mut-borrow can.
+    // This basically means only one scope at a time can edit any one value.
+    // Variables are dropped, when they go out of scope. If they are borrowed to a scope, the
+    // used pointer can go out of scope and is dropped, without the variable being dropped.
 }
