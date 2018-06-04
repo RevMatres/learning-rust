@@ -68,7 +68,7 @@ fn main() {
     // on the stack and the actual information on the heap.
     
     let s1 = String::from("wheeeee");	// create a String-type with s1 as its owner
-    let s2 = s1				// create another variable that points to the heap
+    let s2 = s1;			// create another variable that points to the heap
 
     // In other languages this is called a shallow copy, because in them only the type's data
     // is copied, which is why you end up with more than one pointer to the same place on the heap.
