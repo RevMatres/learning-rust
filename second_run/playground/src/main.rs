@@ -51,14 +51,15 @@ fn main() {
     // the same goes for while, for and loop-loops!
 
     // ITERATIONS
-    // collection types are iterable, if they implement the Iterator-trait
+    /* collection types are iterable, if they implement the Iterator-trait
 
-    // the for-loop always uses an iterator, but unlike the .iter() methods,
-    // which can be used with e.g. .for_each() the for-loop uses an iterator
-    // of references to the collections' values, while the .iter() path uses
-    // the values directly
+       the for-loop always uses an iterator, but unlike the .iter() methods,
+       which can be used with e.g. .for_each() the for-loop uses an iterator
+       of references to the collections' values, while the .iter() path uses
+       the values directly
 
-    // this is stuff, you'll pick up over time…
+       this is stuff, you'll pick up over time…
+    */
 
 
     // OWNERSHIP STUFF
@@ -70,24 +71,37 @@ fn main() {
     let s1 = String::from("wheeeee");	// create a String-type with s1 as its owner
     let s2 = s1;			// create another variable that points to the heap
 
-    // In other languages this is called a shallow copy, because in them only the type's data
-    // is copied, which is why you end up with more than one pointer to the same place on the heap.
-    // In rust this doesn't happen, instead the type's data is MOVED, not SHALLOW COPIED.
-    // That means s1 is invalidated after s2 is assigned the type's data.
-    // That way you never have more than one OWNER and more than one data-set pointing to the same
-    // spot on the heap.
-    // A DEEP COPY would be a CLONE, where both the data and the heap-stuff is duplicated, creating
-    // a functional clone of the initial object.
+    /* In other languages this is called a shallow copy, because in them only the type's data
+       is copied, which is why you end up with more than one pointer to the same place on the heap.
+       In rust this doesn't happen, instead the type's data is MOVED, not SHALLOW COPIED.
+       That means s1 is invalidated after s2 is assigned the type's data.
+       That way you never have more than one OWNER and more than one data-set pointing to the same
+       spot on the heap.
+       A DEEP COPY would be a CLONE, where both the data and the heap-stuff is duplicated, creating
+       a functional clone of the initial object.
 
-    // OWNERSHIP AND BORROWS AND POINTERS
-    // In rust a variable has only one owner.
-    // You can borrow the variable to a different scope via a share-pointer [&var],
-    // in which case both the owner and the other scope can read the variable, but neither
-    // can edit/mutate it.
-    // You can offer up one mutable borrow to a scope via a mutable-share-pointer [&mut var],
-    // in which case the owner can't edit the variable anymore, and only the owner of the
-    // mut-borrow can.
-    // This basically means only one scope at a time can edit any one value.
-    // Variables are dropped, when they go out of scope. If they are borrowed to a scope, the
-    // used pointer can go out of scope and is dropped, without the variable being dropped.
+       OWNERSHIP AND BORROWS AND POINTERS
+       In rust a variable has only one owner.
+       You can borrow the variable to a different scope via a share-pointer [&var],
+       in which case both the owner and the other scope can read the variable, but neither
+       can edit/mutate it.
+       You can offer up one mutable borrow to a scope via a mutable-share-pointer [&mut var],
+       in which case the owner can't edit the variable anymore, and only the owner of the
+       mut-borrow can.
+       This basically means only one scope at a time can edit any one value.
+       Variables are dropped, when they go out of scope. If they are borrowed to a scope, the
+       used pointer can go out of scope and is dropped, without the variable being dropped.
+    */
+
+
+    // WHAT NEXT?
+    /*
+       slices quickly
+       and then get into the complex data types and the custom data types.
+       basically just go through rust-by-example and then go and read the rust book v2 for
+       completion's sake.
+       and after that, go and try and remember all the shit you learned and finally make that
+       bloody path tracer.
+       and then go and read all of the crates and libraries so you'll know about fucking everything, wheeeee!
+     */
 }
