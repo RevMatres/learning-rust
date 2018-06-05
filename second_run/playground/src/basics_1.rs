@@ -1,5 +1,18 @@
 fn main() {
 
+/*
+   This contains:
+   Primitives and mutability
+   Constants
+   Shadowing
+   Control Flow
+   Iterators
+   Ownership
+   Pointers/Borrows
+   Slices
+*/
+
+
     // MUTABILITY
     // variables need to be explicitely mutable, if they are supposed to change
     let mut a = 5u32;
