@@ -125,4 +125,6 @@ fn main() {
     println!("{:?}",e_slice_2);
     println!("{:?}",e_slice_3);
 
+    // Note that string literals like "literal" are also Slices
+
 }
