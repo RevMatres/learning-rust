@@ -79,9 +79,10 @@ fn main() {
        spot on the heap.
        A DEEP COPY would be a CLONE, where both the data and the heap-stuff is duplicated, creating
        a functional clone of the initial object.
+    */
 
-       OWNERSHIP AND BORROWS AND POINTERS
-       In rust a variable has only one owner.
+   //  OWNERSHIP AND BORROWS AND POINTERS
+   /*  In rust a variable has only one owner.
        You can borrow the variable to a different scope via a share-pointer [&var],
        in which case both the owner and the other scope can read the variable, but neither
        can edit/mutate it.
@@ -93,6 +94,23 @@ fn main() {
        used pointer can go out of scope and is dropped, without the variable being dropped.
     */
 
+    // SLICE TYPE
+    /* Slices are references/borrows of parts of collection types like the String or the Array.
+       They are basically a direct pointer to a heap location, that already is part of a collection type.
+       They are share borrows, so they are immutable!
+    */
+
+    let e = [1, 2, 3, 4, 5];
+    
+    let e_slice_1 = &e[1..3];	// range 1..3
+
+    let e_slice_2 = &e[..3];	// range 0..3
+    
+    let e_slice_3 = &e[2..];	// range 2..e.len()
+
+    println!("{:?}",e_slice_1);
+    println!("{:?}",e_slice_2);
+    println!("{:?}",e_slice_3);
 
     // WHAT NEXT?
     /*
