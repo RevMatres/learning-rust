@@ -28,6 +28,9 @@ fn main() {
   let mut v = Vec::new();
   v.push(String::from("sweet baby jesus"));
 
+  // since <i32> Vecs are the most common there's a macro for those, if you have start values
+  let answers = vec![42,42,42,42,42];
+
   // Vectors are collections of one type
   // if you need to have more than one type to be stored in the vec, use an enum
   use custom_types_collection_type::*;
