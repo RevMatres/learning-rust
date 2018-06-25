@@ -1,4 +1,3 @@
 // make a blanket implementation
-fn main() { 
-
+fn main() {
 }
