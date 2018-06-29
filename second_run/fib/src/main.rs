@@ -1,13 +1,12 @@
-extern crate fib;
-
-use fib::*;
+// extern crate fib;
+// use fib::*;
+mod lib;
+use lib::*;
 
 fn main() {
 
     // Setup fib memory
-    let mut fib_memo: Vec<u32> = Vec::new();
-    fib_memo.push(0);
-    fib_memo.push(1);
+    let mut fib_memo: Vec<u32> = make_memo();
 
     // Collect commandline arguments
     let number = get_args();

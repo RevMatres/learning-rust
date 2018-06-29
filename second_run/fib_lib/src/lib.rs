@@ -63,3 +63,11 @@ pub fn fib(memo: &mut Vec<u32>, n: u32) -> u32 {
 
     memo[i]
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}
