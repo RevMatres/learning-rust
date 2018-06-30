@@ -1,0 +1,7 @@
+[package]
+name = "binary"
+version = "0.1.0"
+authors = ["RevMatres <benediktheinen1@gmail.com>"]
+
+[dependencies]
+adders = { path = "../adders" }
