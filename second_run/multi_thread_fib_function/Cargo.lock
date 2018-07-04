@@ -1,0 +1,11 @@
+[[package]]
+name = "fib_lib"
+version = "0.1.0"
+
+[[package]]
+name = "fib_multi_thread"
+version = "0.1.0"
+dependencies = [
+ "fib_lib 0.1.0",
+]
+

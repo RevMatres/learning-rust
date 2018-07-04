@@ -1,0 +1,8 @@
+[package]
+name = "fib_multi_thread"
+version = "0.1.0"
+authors = ["RevMatres <benediktheinen1@gmail.com>"]
+
+[dependencies]
+fib_lib = { path = "../fib_lib" }
+

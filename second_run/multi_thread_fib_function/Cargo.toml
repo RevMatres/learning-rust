@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+	"fib_lib",
+	"fib_multi_thread",
+]
