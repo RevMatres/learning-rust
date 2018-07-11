@@ -1,0 +1,145 @@
+//! # Fibonnaci in Multiple Threads
+//! Sounds straight forward, right? This is just an implementation of a Fibonnaci Calculator, that
+//! computes two Fib-numbers in parallel in two separate threads, using a shared-state memory
+//! vector between them, right?
+//!
+//! Well, no! Not quite.
+//!
+//! ### The Code vs The Compiler
+//! The above description is *indeed* what the code in the *main.rs* **should** do... But as I
+//! hinted, it isn't what it actually does!
+
+// Get crates
+extern crate fib_lib;
+use fib_lib::make_memo;
+
+use std::thread;
+use std::sync::{Mutex, Arc};
+use std::time::Duration;
+
+
+fn main() {
+
+
+
+    /* 
+     * SETUP and SETTINGS part
+     *
+     */
+
+    // Set the to-be-calculated numbers
+    let num_a = 42u64;
+    let num_b = 65u64;
+
+    // Setup memory Vector as an Atomically Reference Counted Mutex containing the memory Vector
+    let mut memory = Arc::new(Mutex::new(make_memo()));
+
+    println!("{}", Arc::strong_count(&memory));
+
+
+
+    /*
+     * THREADING
+     *
+     */
+
+    // Thread for num_a
+
+    // Create a Mutex for the memory vector
+    let mutex_a = Arc::clone(&memory);
+
+    println!("{}", Arc::strong_count(&memory));
+
+    // Create the Thread
+    let calc_a = thread::spawn(move || {
+
+        // Call the fib function with the Reference to the memory vector, the number, and a
+        // Thread-signifier
+        let fib_num = fib(mutex_a, num_a, 1);
+
+        // When the above call has finished, print this:
+        println!("Thread 1's function call is complete !!!!     {}", fib_num);
+    });
+
+
+    // Thread for num_b
+
+    // Create a Mutex for the memory vector
+    let mutex_b = Arc::clone(&memory);
+
+    println!("{}", Arc::strong_count(&memory));
+
+    // Create the Thread
+    let calc_b = thread::spawn(move || {
+
+        // Call the fib function with the Reference to the memory vector, the number, and a
+        // Thread-signifier
+        let fib_num = fib(mutex_b, num_b, 2);
+
+        // When the above call has finished, print this:
+        println!("Thread 2's function call is complete !!!!     {}", fib_num);
+    });
+
+    
+
+    /*
+     * COLLECTING
+     * Make sure all threads have time to finish, before exiting main()
+     */
+
+    calc_a.join().unwrap();
+    calc_b.join().unwrap();
+
+}
+
+fn fib(mut mutex: Arc<Mutex<Vec<u64>>>, n: u64, t: i32) -> u64 {
+
+    println!("{} {}", t, Arc::strong_count(&mutex));
+
+
+    // Vector Indices are usizes
+    let i = n as usize;
+
+
+    // CHECK BASE CASE
+    // The nth fib-number has already been computed
+
+    // acquire Mutex lock
+    let a = mutex.lock().unwrap();
+
+    println!("{} {}", t, Arc::strong_count(&mutex));
+
+    // check for the nth fib-number
+    if a.len() > i {
+        // return the found fib-number
+        return a[i]
+    }
+    
+    // release the Mutex lock
+    drop(a);
+
+
+    // RECURSION
+    // If the fib hasn't been computed yet, do so:
+    let a = fib(Arc::clone(&mutex), n-2, 1);        // This opens a new Reference to the Mutex, so no opened lock is passed down the recursion and blocks the other Thread from acquiring it
+    let b = fib(Arc::clone(&mutex), n-1, 1);
+    let sum = a+b;
+
+    // Add the new fib-number to the memory vector
+ 
+    // acquire the Mutex lock
+    let mut m = mutex.lock().unwrap();
+
+    // push the fib-number onto the vector
+    m.push(sum);
+
+    // print: this thread has produced a new fib-number!
+    println!("Thread {}: {}", t, m[i]);
+
+    // release the Mutex lock
+    drop(m);
+
+    // return the "new" fib-number
+    sum
+
+}

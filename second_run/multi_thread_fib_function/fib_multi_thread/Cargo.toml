@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["RevMatres <benediktheinen1@gmail.com>"]
 
 [dependencies]
+log="0.4.3"
 fib_lib = { path = "../fib_lib" }
 

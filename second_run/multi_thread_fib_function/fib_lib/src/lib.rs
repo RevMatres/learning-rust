@@ -75,12 +75,9 @@ pub fn fib(memo: &mut Vec<u64>, n: u64) -> u64 {
     // Vector Indices are usizes
     let i = n as usize;
 
-    // Check for the base cases:
-    // n is 0 or 1
-    if n == 0 | 1 {
-        return memo[i]
+    // Check for the base case:
     // the nth fib-number has already been computed
-    } else if memo.len() > i {
+    if memo.len() > i {
         return memo[i]
     }
 
