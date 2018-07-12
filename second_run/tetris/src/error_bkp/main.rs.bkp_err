@@ -27,15 +27,17 @@ fn main() {
 
     let mut app = App::new(opengl);
     let mut eventqeue = setup_eventloop();
-    handle_events(&mut eventqeue, &mut window, &mut app, &gameS_rx);
+    handle_events(&mut eventqeue, &mut window, &mut app, gameS_rx);
 
 
+    /*
     // Listen to the Game State channel
     loop {
         if let Ok(value) = gameS_rx.try_recv() {
             println!("{}", value);
         }
     }
+    */
 
 
     // Collect ya threads, bro
