@@ -10,6 +10,7 @@ use self::glutin_window::GlutinWindow as Window;
 use self::opengl_graphics::{ GlGraphics, OpenGL };
 
 use std::sync::mpsc::Receiver;
+use std::thread;
 
 /// Basic structure for an OpenGL window
 pub struct App {
@@ -58,6 +59,27 @@ pub fn setup_glutin_window(title: &str, size: [u32; 2], opengl: OpenGL) -> Windo
         .exit_on_esc(true)
         .build()
         .unwrap()
+}
+
+
+
+//////// FIX THE SHIT WTH THE GAMESTATE SOCKETS SO THAT IT IS PROPERLY MODULARIZED
+//////// ORDER SORT AND DOCUMENT THIS FUCKING SHIT
+//////// RENAME THE APP THING TO SOMETHING LIKE OPENGL THINGY SO THAT IT MAKES MORE SENSE
+//////// U USE A REFCELL FOR THE TETRIS BOARD AND TRY BORROW MUT OR TRY AGAIN TO CALC CHANGES OR
+//////// STH
+
+pub fn piston_setup(opengl: OpenGL, title: &'static str, size: [u32; 2], gamestate: Receiver<String>) -> thread::JoinHandle<Receiver<String>> {
+    let piston_thread = thread::spawn(move || -> Receiver<String> {
+        let gs = gamestate;
+        let mut window = setup_glutin_window(title, size, opengl);
+        let mut app = App::new(opengl);
+        let mut eventqeue = setup_eventloop();
+        handle_events(&mut eventqeue, &mut window, &mut app, &gs);
+        return gs
+    });
+
+    return piston_thread
 }
 
 pub fn setup_eventloop() -> Events {

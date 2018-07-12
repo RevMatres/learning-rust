@@ -15,21 +15,27 @@ fn main() {
      *
      */
 
-    // Change this to OpenGL::V2_1 if not working.
-    let opengl = OpenGL::V3_2;
-
-    // Create a Glutin window.
-    let mut window = setup_glutin_window("TETRIIIIIS!", [500, 600], opengl);
-
     // Create a Tetris Thread
     let (tetris_thread_handler, event_tx, gameS_rx) = tetris_setup();
 
+    // Change this to OpenGL::V2_1 if not working.
+    let opengl = OpenGL::V3_2;
 
-    let mut app = App::new(opengl);
-    let mut eventqeue = setup_eventloop();
-    handle_events(&mut eventqeue, &mut window, &mut app, &gameS_rx);
+    // Create the Rendering Thread
+    let piston_thread_handler = piston_setup(opengl, "TETRIIIIIS!", [500, 600], gameS_rx);
+    let optional_gamestate = piston_thread_handler.join();
 
-
+    match optional_gamestate {
+        Ok(gameState) => {
+            loop {
+                if let Ok(value) = gameState.try_recv() {
+                    println!("{}", value);
+                }
+            }
+        },
+        _ => {}
+    }
+/*
     // Listen to the Game State channel
     loop {
         if let Ok(value) = gameS_rx.try_recv() {
@@ -40,4 +46,5 @@ fn main() {
 
     // Collect ya threads, bro
     tetris_thread_handler.join().unwrap();
+    */
 }
