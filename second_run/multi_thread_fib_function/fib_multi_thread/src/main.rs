@@ -8,7 +8,7 @@
 //! ## What's odd here.
 //! There are two interesting things happening with this program. The code in *main.rs* implements
 //! what is described above. That isn't what the final compiled executable does, though.  
-//! For one it only calculates the Fibonnaci sequence in one of the threads, and for another you
+//! For one it only calculates the Fibonnaci sequence in only one of the threads, and for another you
 //! can create a Race Condition with this program. (It's not implemented to have that, but there is
 //! a simple change to the code that can be made to create it; see below)
 //!
@@ -52,7 +52,7 @@
 //! fib-numbers on the memory vector and releases the lock. Then it returns the newly computed
 //! fib-number to the function caller.
 //!
-//! In *main.rs* in between the lines `` and `` the following code is written:
+//! In *main.rs* in between the lines `221` and `228` the following code is written:
 //!
 //! ```
 //! // add the new fib-num only, if no other fib-call has added the value since the last check
@@ -61,6 +61,7 @@
 //! }
 //!
 //! // To create a race condition, uncomment the following line
+//! // and comment out the above if-block
 //! // m.push(s);
 //! ```
 //!
@@ -223,6 +224,7 @@ fn fib(mutex: Arc<Mutex<Vec<u64>>>, n: u64, t: i32) -> u64 {
     }
 
     // To create a race condition, uncomment the following line
+    // and comment out the above if-block
     // m.push(s);
 
     // output the thread and the newly-made fib-num
