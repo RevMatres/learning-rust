@@ -9,11 +9,6 @@ use self::piston::input::*;
 use self::glutin_window::GlutinWindow;
 use self::opengl_graphics::{ GlGraphics, OpenGL };
 
-use std::sync::mpsc::Receiver;
-use std::sync::{RwLock, LockResult, RwLockWriteGuard};
-use std::thread;
-use std::time::Duration;
-
 
 
 /*
@@ -53,49 +48,45 @@ unsafe impl Send for Window {}
 
 
 /*
- * Making a Rendering Thread
+ * Making a Renderer and Event-Handler
  *
  */
 
-pub struct Engine { }
+pub struct Engine {
+    glutin_window: GlutinWindow,
+    event_qeue: Events,
+    gamestate: Receiver<String>,
+}
 
 impl Engine {
 
     // Create a new thread, in which Piston's Eventhandler is run
-    pub fn new(mut window: Window, gamestate: Receiver<String>) -> thread::JoinHandle<()> {
-        let piston_thread = thread::spawn(move || {
-
-            // Get the Glutin Window
-            let mut glutWin = window.get_window();
-
-            // Create an Event Loop
-            let mut eventqeue = setup_eventloop();
-
-            // Run the Event Handler
-            handle_events(&mut eventqeue, &mut glutWin, &gamestate)
-        });
-
-        return piston_thread
-    }
-}
-
-
-// Make a new Eventloop
-fn setup_eventloop() -> Events {
-    let mut e = Events::new(EventSettings::new());
-    return e
-}
-
-// Eventhandler to handle Events
-fn handle_events(event_qeue: &mut Events, window: &mut GlutinWindow, gamestate: &Receiver<String>) {
-    while let Some(event) = event_qeue.next(window) {
-        // If the returned event is an Input::Render(RenderArgs)
-        if let Some(render) = event.render_args() {
-            if let Ok(value) = gamestate.try_recv() {
-                println!("{:?}", value);
-                //render(&render);
-                continue;
-            }
+    pub fn new(mut window: Window, gamestate: Receiver<String>) -> Engine {
+        Engine {
+            glutin_window: window.get_window(),
+            event_qeue: Engine::setup_eventloop(),
+            gamestate
         }
     }
+
+    // Make a new Eventloop
+    fn setup_eventloop() -> Events {
+        let mut e = Events::new(EventSettings::new());
+        return e
+    }
+
+    // Handle incoming OpenGL Events
+    pub fn handle_events(&mut self) {
+        while let Some(event) = &mut self.event_qeue.next(&mut self.glutin_window) {
+
+            if let Some(render) = event.render_args() {
+                if let Ok(value) = self.gamestate.try_recv() {
+                    println!("{:?}", value);
+                    continue;
+                }
+            }
+
+        }
+    }
+
 }
