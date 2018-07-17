@@ -13,12 +13,6 @@ use tetris::tetris_setup;
 
 
 fn main() {
-
-    /*
-     * SETUP THE WINDOW
-     *
-     */
-
     // Create a Tetris Thread
     let (tetris_thread_handler, event_tx, gameS_rx) = tetris_setup();
 
@@ -27,35 +21,11 @@ fn main() {
 
     // Create a Glutin Window
     let mut window = Window::new("TETRIIIIIS!", [500, 600], opengl);
+
+    // Create a Piston Renderer Thread
     let piston_thread_handler = Engine::new(window, gameS_rx);
 
+    // Collect the Threads
     tetris_thread_handler.join().unwrap();
     piston_thread_handler.join().unwrap();
-
-    // Create the Rendering Thread
-    //let piston_thread_handler = piston_setup(opengl, "TETRIIIIIS!", [500, 600], gameS_rx);
-    //let optional_gamestate = piston_thread_handler.join();
-
-    //match optional_gamestate {
-    //    Ok(gameState) => {
-    //        loop {
-    //            if let Ok(value) = gameState.try_recv() {
-    //                println!("{}", value);
-    //            }
-    //        }
-    //    },
-    //    _ => {}
-    //}
-/*
-    // Listen to the Game State channel
-    loop {
-        if let Ok(value) = gameS_rx.try_recv() {
-            println!("{}", value);
-        }
-    }
-
-
-    // Collect ya threads, bro
-    tetris_thread_handler.join().unwrap();
-    */
 }
