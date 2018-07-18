@@ -1,3 +1,5 @@
+// IMPORTS
+
 extern crate piston;
 extern crate graphics;
 extern crate glutin_window;
@@ -16,13 +18,14 @@ use self::opengl_graphics::{ GlGraphics, OpenGL };
  *
  */
 
-
+/// A structure that represents and instantiates a Glutin OpenGL Window
 pub struct Window {
     pub window: GlutinWindow
 }
 
 impl Window {
 
+    /// Creates a new Window 
     // Creates a new Window containing a Glutin OpenGL context
     pub fn new(title: &str, size: [u32; 2], opengl: OpenGL) -> Window {
         let mut win = WindowSettings::new(title, size)
