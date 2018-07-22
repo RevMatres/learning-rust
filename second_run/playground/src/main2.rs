@@ -30,17 +30,15 @@ fn main() {
         // do a couple changes to the game data and state
         // and then send them on their merry way back to the main thread
         for i in 0..5 {
-            change(Arc::clone(&tetris_game), '!', GS::Active(i*9));
-            tx.send(Arc::clone(&tetris_game)).unwrap();
-            tx.send(Arc::clone(&tetris_game)).unwrap();
+            change(Arc::clone(&tetris_game), '!', "Active", 9*i);
             tx.send(Arc::clone(&tetris_game)).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
 
         // finally, set the game to be over
         // and send that back to main
-        change(Arc::clone(&tetris_game), '?', GS::Over(10000));
-        tx.send(Arc::clone(&tetris_game)).unwrap();
+        change(Arc::clone(&tetris_game), '?', "Over", 10000);
+        tx.send(Arc::clone(&tetris_game));
 
     });
 
@@ -50,35 +48,26 @@ fn main() {
     loop {
         
         let recv_stack = rx.try_recv();
-        thread::sleep(Duration::from_millis(900));
-        for (i, v) in recv_stack.iter().enumerate() {
-            println!("{}", i);
-        }
-        if let Ok(ref game) = recv_stack {
+        if let Ok(Game) = recv_stack {
 
-            //thread::sleep(Duration::from_millis(900));
-
-            if let GS::Active(score) = game.state.get_state() {
+            if let GS::Active(score) = Game.state.get_state() {
                 println!("The current score is: {}", score);
-                let rl = game.data.get_read();
+                let rl = Game.data.get_read();
                 println!("{}", rl);
             };
 
-            if let GS::Over(fscore) = game.state.get_state() {
+            if let GS::Over(fscore) = Game.state.get_state() {
                 println!("The final score is: {}", fscore);
-                let rl = game.data.get_read();
+                let rl = Game.data.get_read();
                 println!("{}", rl);
-                break;
             };
 
         }
 
     }
 
-    tetris_handler.join().unwrap();
+    tetris_handler.join();
 
 }
 
-
-// OK
 
