@@ -41,9 +41,7 @@ fn main() {
     /*
     // Create a Piston Renderer Thread
     let piston_thread_handler = thread::spawn(move || {
-        //let mut piston_renderer = Engine::new(wini, game_state_rx);
         let mut piston_renderer = Engine::new(window, game_state_rx);
-        //piston_renderer.handle_events(&mut app)
         piston_renderer.handle_events()
     });
 

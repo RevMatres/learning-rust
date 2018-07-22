@@ -3,6 +3,7 @@
 use std::thread;
 use std::sync::mpsc::{channel, Sender, Receiver};
 use std::time::Duration;
+use std::sync::{RwLock, RwLockReadGuard};
 
 /// Function to create a thread, in wich the Tetris logic runs
 ///
@@ -22,26 +23,53 @@ use std::time::Duration;
 ///
 /// **After using the Game-State the reference *must* be dropped, or the Tetris game can't continue
 /// its operation!**
-pub fn tetris_setup() -> (thread::JoinHandle<()>, Sender<String>, Receiver<String>) {
+pub fn tetris_setup() -> (thread::JoinHandle<()>, Sender<String>, Receiver<RwLockReadGuard<String>>) {
     // Create message-channels
     let (events_tx, events_rx) = channel();
     let (game_state_tx, game_state_rx) = channel();
 
     // Create the Tetris thread
     let handle = thread::spawn(move || {
-        let events_rx = events_rx;
-        let game_state_tx = game_state_tx;
-        loop {
-            thread::sleep(Duration::from_secs(1));
-            game_state_tx.send("wheeeeeee-zaaaaaaah".to_string()).unwrap();
-            run();
-        }
+        run(events_rx, game_state_tx);
     });
     
     return (handle, events_tx, game_state_rx)
 }
 
 /// This function contains and executes the Tetris game logic
-fn run() {
-    println!("Wheeee")
+fn run(events_rx: Receiver<String>, game_state_tx: Sender<RwLockReadGuard<String>>) {
+    
+    // Game Logic Setup
+    let board_lock = RwLock::new(String::new());
+
+    // Game Loop
+    loop {
+        // make a block
+        // add block to board
+
+        // Block Loop
+        loop {
+            // acquire write lock on board
+            let board = board_lock.write().unwrap();
+
+            board.push('a');
+            // listen to timer
+            // listen to events
+            // transform, check for collisions
+            // remove block from board
+            // add block to board
+
+            drop(board);
+
+            // SEND GAMESTATE
+            game_state_tx.send(board_lock.read().unwrap());
+        }
+        
+        // handle scoring
+        // SEND GAMESTATE
+
+    }
+    // logic setup: makes a board
+    // game loop: makes a new block, handles merging and the scores, etc
+    // block loop: while a block is moving, ya check for times and events etc
 }

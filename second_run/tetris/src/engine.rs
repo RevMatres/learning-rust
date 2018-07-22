@@ -11,6 +11,7 @@ use self::piston::input::*;
 use self::glutin_window::GlutinWindow;
 use self::opengl_graphics::{ GlGraphics, OpenGL };
 use std::sync::mpsc::Receiver;
+use std::sync::RwLockReadGuard;
 
 
 
@@ -75,7 +76,7 @@ pub struct Engine {
     glutin_window: GlutinWindow,
     glgraphics: GlGraphics,
     event_qeue: Events,
-    gamestate: Receiver<String>,
+    gamestate: Receiver<RwLockReadGuard<String>>,
 }
 
 impl Engine {
@@ -86,7 +87,7 @@ impl Engine {
     /// `window` takes a Window containing the desired settings for the Glutin Window  
     /// `gamestate` takes the receiving end of a channel via which some other part of the program
     /// sends a reference to a Game-State object to the Engine, so it can be rendered
-    pub fn new(window: Window, gamestate: Receiver<String>) -> Engine {
+    pub fn new(window: Window, gamestate: Receiver<RwLockReadGuard<String>>) -> Engine {
 
         // create the actual Glutin Window from the provided settings
         let (glutin_window, glgraphics) = window.create();
@@ -118,8 +119,9 @@ impl Engine {
                 self.glgraphics.draw(render_args.viewport(), |c, gl|{
                     clear([ 0f32, 0f32, 0f32, 0f32], gl)
                 });
-                if let Ok(value) = self.gamestate.try_recv() {
-                    println!("{:?}", value);
+                if let Ok(board) = self.gamestate.try_recv() {
+                    println!("{}", board);
+                    drop(board);
                     continue;
                 }
             }
@@ -128,30 +130,3 @@ impl Engine {
     }
 
 }
-
-
-/*
- * Making a Container of Rendering Functions aka the OpenGL-App
- *
-
-pub struct App {
-    gl: GlGraphics,
-}
-
-impl App {
-    pub fn new(opengl: OpenGL) -> App {
-        App {
-            gl: GlGraphics::new(opengl)
-        }
-    }
-
-    fn render(&mut self, args: &RenderArgs) {
-        use self::graphics::*;
-
-        self.gl.draw(args.viewport(), |c, gl| {
-            clear([ 0f32, 0f32, 0f32, 0f32], gl)
-        });
-    }
-
-}
-*/
