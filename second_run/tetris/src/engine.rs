@@ -81,15 +81,6 @@ pub struct Engine {
 
 impl Engine {
 
-<<<<<<< HEAD
-    // Create a new Engine Instance
-    pub fn new(window: Window, gamestate: Receiver<String>) -> Engine {
-
-        // Create the OpenGL thingies!
-        let (glutin_window, glgraphics) = window.create();
-
-        // Return an Engine Instance
-=======
     /// creates an instance of `Engine`
     ///
     /// ## The Input Parameters
@@ -101,7 +92,6 @@ impl Engine {
         // create the actual Glutin Window from the provided settings
         let (glutin_window, glgraphics) = window.create();
 
->>>>>>> ff8595d88a5af431160a8752d6f0995ac7489e4e
         Engine {
             glutin_window,
             glgraphics,
@@ -140,7 +130,3 @@ impl Engine {
     }
 
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> ff8595d88a5af431160a8752d6f0995ac7489e4e

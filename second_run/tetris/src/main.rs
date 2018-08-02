@@ -35,21 +35,13 @@ fn main() {
     // Change this to OpenGL::V2_1 if not working.
     let opengl = OpenGL::V3_2;
 
-<<<<<<< HEAD
     // Create a window (this only contains the settings for a window)
-=======
-    // Create a Window Wrapper
->>>>>>> ff8595d88a5af431160a8752d6f0995ac7489e4e
     let window = Window::new("TETRIIIIIS!", [500, 600], opengl);
 
     /*
     // Create a Piston Renderer Thread
     let piston_thread_handler = thread::spawn(move || {
-<<<<<<< HEAD
-        let mut piston_renderer = Engine::new(window, gameS_rx);
-=======
         let mut piston_renderer = Engine::new(window, game_state_rx);
->>>>>>> ff8595d88a5af431160a8752d6f0995ac7489e4e
         piston_renderer.handle_events()
     });
 
@@ -58,13 +50,8 @@ fn main() {
     piston_thread_handler.join().unwrap();
     */
 
-<<<<<<< HEAD
-    /*
     // Run the Renderer in the main()-thread
-    let mut piston_renderer = Engine::new(window, gameS_rx);
-=======
     let mut piston_renderer = Engine::new(window, game_state_rx);
->>>>>>> ff8595d88a5af431160a8752d6f0995ac7489e4e
     piston_renderer.handle_events()
 
 }
