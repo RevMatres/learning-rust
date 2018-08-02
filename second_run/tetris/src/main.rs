@@ -20,22 +20,12 @@ fn main() {
     // Change this to OpenGL::V2_1 if not working.
     let opengl = OpenGL::V3_2;
 
-    // Create a Glutin Window
+    // Create a window (this only contains the settings for a window)
     let window = Window::new("TETRIIIIIS!", [500, 600], opengl);
-    //let mut app = App::new(opengl);
-//    let window: GlutinWindow = WindowSettings::new("TETRIS", [400,345])
-//            .opengl(opengl)
-//            .exit_on_esc(true)
-//            .build()
-//            .unwrap();
-//
-//    let mut app = App::new(opengl);
 
     // Create a Piston Renderer Thread
     let piston_thread_handler = thread::spawn(move || {
-        //let mut piston_renderer = Engine::new(wini, gameS_rx);
         let mut piston_renderer = Engine::new(window, gameS_rx);
-        //piston_renderer.handle_events(&mut app)
         piston_renderer.handle_events()
     });
 
@@ -44,6 +34,7 @@ fn main() {
     piston_thread_handler.join().unwrap();
 
     /*
+    // Run the Renderer in the main()-thread
     let mut piston_renderer = Engine::new(window, gameS_rx);
     piston_renderer.handle_events()
     */

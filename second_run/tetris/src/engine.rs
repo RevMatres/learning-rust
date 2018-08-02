@@ -13,7 +13,7 @@ use std::sync::mpsc::Receiver;
 
 
 /*
- * Making a Glutin Window
+ * Making a Window
  *
  */
 
@@ -44,32 +44,8 @@ impl Window {
         (glutin_window, glgraphics)
     }
 
-    /*
-    // Creates a new Window containing a Glutin OpenGL context
-    pub fn new(title: &str, size: [u32; 2], opengl: OpenGL) -> Window {
-        let win = WindowSettings::new(title, size)
-            .opengl(opengl)
-            .exit_on_esc(true)
-            .build()
-            .unwrap();
-
-        Window {
-            window: win,
-            gl: GlGraphics::new(opengl),
-        }
-    }
-    
-    // Returns the Glutin Window
-    // Note: This Method moves the window out of the Window struct
-    pub fn get_window(self) -> (GlutinWindow, GlGraphics) {
-        (self.window, self.gl)
-    }
-    */
-
 } 
 
-// Make Window Thread-safe!
-//unsafe impl Send for Window {}
 
 
 /*
@@ -87,23 +63,12 @@ pub struct Engine {
 impl Engine {
 
     // Create a new Engine Instance
-    //pub fn new(window: Window, gamestate: Receiver<String>) -> Engine {
-    /*
-    pub fn new(gamestate: Receiver<String>) -> Engine {
-    //pub fn new(window: Window) -> Engine {
-        let window = Window::new("TETRIIIIIS!", [500, 600], OpenGL::V3_2);
-        let (w, g) = window.get_window();
-        Engine {
-            glutin_window: w,
-            gl: g,
-            event_qeue: Engine::setup_eventloop(),
-            gamestate,
-        }
-    }
-    */
-
     pub fn new(window: Window, gamestate: Receiver<String>) -> Engine {
+
+        // Create the OpenGL thingies!
         let (glutin_window, glgraphics) = window.create();
+
+        // Return an Engine Instance
         Engine {
             glutin_window,
             glgraphics,
@@ -140,29 +105,3 @@ impl Engine {
 
 }
 
-
-/*
- * Making a Container of Rendering Functions aka the OpenGL-App
- *
- */
-
-pub struct App {
-    gl: GlGraphics,
-}
-
-impl App {
-    pub fn new(opengl: OpenGL) -> App {
-        App {
-            gl: GlGraphics::new(opengl)
-        }
-    }
-
-    fn render(&mut self, args: &RenderArgs) {
-        use self::graphics::*;
-
-        self.gl.draw(args.viewport(), |c, gl| {
-            clear([ 0f32, 0f32, 0f32, 0f32], gl)
-        });
-    }
-
-}
