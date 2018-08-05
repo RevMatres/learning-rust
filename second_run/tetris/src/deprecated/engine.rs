@@ -16,7 +16,7 @@ use std::sync::RwLockReadGuard;
 
 
 /*
- * Making a Glutin Window
+ * Making a Window
  *
  */
 
