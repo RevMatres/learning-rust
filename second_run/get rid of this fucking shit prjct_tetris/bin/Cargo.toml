@@ -1,0 +1,9 @@
+[package]
+name = "bin"
+version = "0.1.0"
+authors = ["RevMatres <benediktheinen1@gmail.com>"]
+
+[dependencies]
+tetris = { path = "../tetris" }
+engine = { path = "../engine" }
+channels = { path = "../channels" }

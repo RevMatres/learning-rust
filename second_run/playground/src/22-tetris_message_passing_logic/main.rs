@@ -103,9 +103,12 @@ fn main() {
     // receive messages from the tetris thread
     loop {
         
-            /* TODO: make this file sensible again, use try_iter(), commit
-             *  - rename files and remove deprecations, commit
-             *  - actually port this mess into the tetris thing, commit
+            /* TODO:
+             *  - refactor: have the Game Type contain one RwLock, so everything inside can be
+             *    accessed with just one lock
+             *  - actually port this mess into the tetris thing, commit → this will be easiest, by
+             *    just rewriting the tetris module; you'll have to figure out how to import the
+             *    relevant types for the rendering into the engine module
              *  - put these files to rest in the playground, commit
              */
 

@@ -1,0 +1,42 @@
+engine>render_event_handler
+
+  - engine's setup function takes a closure, defined on the
+    main thread
+  - this closure's return type is <&T: Renderable>
+  - Renderable trait provides .get_render_data() and .get_game_state() and .get_game_score()
+     - .get_render_data() returns a reference to the 2-dim-collection used to store data
+     - .get_game_state() returns a token, that represents either Active or Over
+     - .get_game_score() returns the score as i32
+  - the construct Tetris makes:
+
+			Arc(
+				RwLock(
+					Game {
+						data: GameData,
+						state: GameState,
+					}
+				)
+			)
+
+	- the closure
+		- the closure takes a reference to the Receiver from its environment in main()
+		- it then gets a read lock on Game and empties the queue
+		- it then returns its read lock, as that's a reference to Game, which impl's Renderable
+
+		- single threaded the closure also has to send off values to the AI
+		- multi threaded the closure is going to take the Receiver of the channel from main()'s
+		  channel handler function
+
+	- Game
+	  - impl's renderable
+		- Game.get_render_data() returns &self.data
+		- Game.get_game_state() returns token, based on &self.state
+		- Game.get_game_score() returns v in let GameState::Active(v) | GameState::Over(v) = &self.state
+
+
+	It depends on exactly how GameData behaves, wether it needs to be dereferencable etc
+	whether get_render_data is going to work as described above. If it makes problems,
+	either not use a GameData but use the Collections directly or use a method on GameData
+	directly or sth...
+	- GameData
+	  - GameData.get_data() returns &self

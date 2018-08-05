@@ -1,0 +1,27 @@
+[[package]]
+name = "bin"
+version = "0.1.0"
+dependencies = [
+ "channels 0.1.0",
+ "engine 0.1.0",
+ "tetris 0.1.0",
+]
+
+[[package]]
+name = "channels"
+version = "0.1.0"
+
+[[package]]
+name = "engine"
+version = "0.1.0"
+dependencies = [
+ "tetris 0.1.0",
+]
+
+[[package]]
+name = "tetris"
+version = "0.1.0"
+dependencies = [
+ "channels 0.1.0",
+]
+
