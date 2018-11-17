@@ -5,7 +5,7 @@ use std::io; // Need access to stdin
 /**
  * Function, that'll compute a base 10 cross sum
  */
-fn digit_sum(mut num: i64) -> i64 {
+fn digit_sum(mut num: u64) -> u64 {
 
     let mut sum = 0;
 
@@ -42,14 +42,14 @@ fn main() {
     }
 
     // Check for maximally encodable number
-    if input.trim().len() > 19 {
+    if input.trim().len() > 20 {
         println!("Your number is too large to be represented.");
         exit(1);
     }
 
     // Turn the string into a number... remember to trim whitespace
-    let number: i64 = match input.trim()
-        .parse::<i64>() {
+    let number: u64 = match input.trim()
+        .parse::<u64>() {
             Ok(n) => n, // You have to put this first: match infers its return type from the first match arm
             Err(_e) => {
                 println!("Your 'number' contains invalid digits.");
