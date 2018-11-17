@@ -26,7 +26,7 @@ fn main() {
     // I have to flush explicitely to empty the stdout buffer,
     // or the system will only run the println! after the read_line()
     // below...
-    io::stdout().flush();
+    io::stdout().flush().unwrap();
     // Note: flush is part of the write trait
 
     // Make a string to get the input
@@ -34,25 +34,31 @@ fn main() {
 
     // Get the input and handle potential failure
     match io::stdin().read_line(&mut input) {
-        Ok(v) => {},
-        Err(e) => {
+        Ok(_v) => {},
+        Err(_e) => {
             println!("Couldn't read your input");
             exit(1);
         },
     }
 
-    // Turn the string into a number... Remember to trim whitespace!
-    let mut number: i64 = match input.trim()
+    // Check for maximally encodable number
+    if input.trim().len() > 19 {
+        println!("Your number is too large to be represented.");
+        exit(1);
+    }
+
+    // Turn the string into a number... remember to trim whitespace
+    let number: i64 = match input.trim()
         .parse::<i64>() {
             Ok(n) => n, // You have to put this first: match infers its return type from the first match arm
-            Err(e) => {
-                println!("You 'number' contains invalid digits or is too large to be represented.");
+            Err(_e) => {
+                println!("Your 'number' contains invalid digits.");
                 exit(1);
             },
     };
 
     // Keep score of the digital sum
-    let mut digital_sum = 0;
+    let mut digital_sum;
 
     // Compute a first digit sum (cross sum)
     digital_sum = digit_sum(number);
