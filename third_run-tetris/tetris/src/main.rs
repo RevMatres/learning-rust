@@ -1,6 +1,7 @@
 mod lib;
 
+use lib::*;
+
 fn main() {
-    lib::honk();
-    println!("Hello, world!");
+    honk();
 }

@@ -1,0 +1,78 @@
+THREAD MODEL:
+render() only updates the render_buffer.
+upon creation of game_state a Mutex<Arc<Reference>> to the
+render_buffer is also created, so the renderer can be put
+anywhere.
+
+
+main()			| Renderer
+loop {			| loop {
+			|
+  update()		|   render()
+  event_handling()	|	the renderer thread can
+  update(event)		|	render whenever, it always
+			|	has uncorrupted data, from
+  render()		|	the render_buffer → eventual convergence
+}			| }
+
+
+You have to initialize the render_buffer in a thread safe manner.
+But note that you only have to have a reading reference be shared
+across threads, no need for a writing reference to be shared as
+well!
+
+
+
+GENERAL STRUCTURE:
+
+
+game_state
+
+  time_stamp
+    time of last call to update
+
+  block_queue
+    block
+
+  board_buffer
+    rows
+      columns
+        single_blocks
+
+  active_block
+    block
+      orientation
+      single_blocks
+      turn_operations
+
+  render_buffer
+    copy of board_buffer that is updated periodically and made public
+
+  --------------------------------------
+
+  active_block
+    move
+    collision detector
+      merge_to_board_buffer
+      active_block.block = block_queue.pop()
+      block_queue.push( new block )
+
+  update()
+    delta_time(timestamp) → time based updates to active_block
+    note: an external loop is responsible for updating
+
+  update(event)
+    update based on event
+    note: an external even constructor is responsible for updating
+
+  render() -> call this update_render_buffer() !!!
+    updates render_buffer, so something external can render, while updates occur
+    note: an external renderer is responsible for updating
+
+
+
+create_game_state()
+  creates reference to render_buffer
+  creates and intializes game_state with mutex<arc<&render_buffer>>
+  returns (game_state object, mutex<arc<&render_buffer>>)
+

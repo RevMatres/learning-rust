@@ -1,0 +1,101 @@
+
+struct Buffer {
+	// I want this heap allocated so it doesn't auto copy!
+	Box<[ [ Option<game_block>; GAME_COLUMNS ]; GAME_ROWS ]>;
+}
+
+pub tuple Color = (r, g, b);
+
+struct game_block {
+
+	x
+	y
+	color: Color
+	orientation
+
+}
+
+impl game_block {
+
+	turn operations
+
+}
+
+impl Copy for game_block { // or whatever the explicit duplicate trait is }
+
+
+struct game_state {
+
+	time_stamp = ?
+
+	block_queue: new game_block;
+
+
+
+	board_buffer = new Buffer();
+
+	init_board_buffer(&mut board_buffer); // inits board buffer to None()s
+
+
+
+	active_block: new game_block;
+
+
+	render_buffer_reference = render_buffer.write(); // render_buffer is in an rwLock, this is the only write lock holder
+							 // this has to be wrapped in an arc
+
+}
+
+
+impl game_state {
+
+	create(width, height, Arc<RwLock<Buffer>>)
+
+	update() -> Result<Ok('s fine) | Err(game_over)> {
+		/* update the active_block and board_buffer */
+
+		// check for game over condition
+		// if game over: return Err(game_over)
+
+		// compute delta time
+		// run collision_checker with active_block's coordinates + 1
+		// if !collision update active_block's coordinates
+		// if collision merge_block() and active_block = block_queue and block_queue = new block
+
+		return OK('s fine)
+	}
+
+	update(enum Event) { /* update the active_block and board_buffer */ }
+
+	update_render_buffer() {
+		// decide whether to just copy the board_buffer or to actually compute a delta and update smartly...
+		// or: empty the box and actually replace the data inside the buffer → Write trait?
+	}
+
+	detect_collision(&active_block, &board_buffer) -> Boolean
+
+	merge_block(&mut active_block, &mut board_buffer) {
+		// copy each single_block into the board_buffer
+	}
+
+
+	get_score()
+	get_queue()
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

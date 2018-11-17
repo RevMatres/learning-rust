@@ -1,0 +1,34 @@
+
+This is what the tetris api has to offer:
+
+update(time_event)
+update(input_event)
+&render_buffer
+
+Some loop then has to update with a time set given and
+the inputs given. Some loop then also renders some output.
+Where, that is in what threads any of this happens
+is completely irrelevant to tetris. Tetris doesn't actually
+do anything on its own, it's merely the state of the game.
+Nothing more.
+
+So in a first version we can use a piston-glutin based renderer,
+and we can use the render loop and openGL input to update the
+game.
+
+In a subsequent version we could substitute the input handler
+with an AI, that gets its input data from the render buffer
+and other game state variables, and still use the renderer
+to render some output, only without using the renderer's loop
+to dictate the game.
+Really one should then implement the ai and game with their
+separate threads and make that working, and add the renderer
+in the end.
+
+On top of that, one can then use a manager to handle all
+the genetic algorithm stuff.
+
+So for now: I'll just implement the tetris game logic and
+types as a state-object from a library and run the game
+loop manually. Then I'll add a renderer and run it from there.
+That way I should get a working game.
