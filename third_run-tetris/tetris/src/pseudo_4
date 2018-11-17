@@ -26,8 +26,8 @@ struct block { // a single block
 }
 
 
-pub enum Shape < shape_name(Color) >
-create_shape(Shape) -> [block; 4] {
+pub enum Shape < SHAPE_NAME(Color) >
+shape_to_blocks(Shape) -> [block; 4] {
 	match Shape {
 		... => return ...
 	}
@@ -60,7 +60,7 @@ impl game_block {
 	create(shape: Shape, x, y) -> game_block {
 		let color = shape(color)
 
-		let blocks = create_shape(shape)
+		let blocks = shape_to_blocks(shape)
 
 		return game_block {
 			x, y,
@@ -74,7 +74,7 @@ impl game_block {
 		f(self);
 	}
 
-	runner<F>(& self, f: F) where F: Fn(&Self) {
+	runner<F>(&self, f: F) where F: Fn(&Self) {
 		f(self);
 	}
 
@@ -82,16 +82,24 @@ impl game_block {
 		// magic
 	}
 
-	dry_move(&self) -> [[i32; 2]; 4] {
-		// wizardry
+	dry_move(&self, dir: Direction) -> [[i32; 2]; 4] {
+		match dir {
+			Left  => { return [ self.x - 1, self.y ] },
+			Right => { return [ self.x + 1, self.y ] },
+			Down  => { return [ self.x, self.y + 1 ] },
+		}
 	}
 
 	rotate_for_real(&mut self) {
 		// rotate but mutate
 	}
 
-	move_for_real(&mut self, Direction) {
-		// move but like edit the thing
+	move_for_real(&mut self, dir: Direction) {
+		match dir {
+			Left  => { self.x -= 1 },
+			Right => { self.x += 1 },
+			Down  => { self.y += 1 },
+		}
 	}
 
 	get_actual_positions(&self) -> [block; 4] {
@@ -185,6 +193,8 @@ impl game_state {
 		if delta_time > self.update_interval { self.move(Down) }
 		self.time_stamp = new Time;
 
+		self.check_rows();
+
 		return Ok
 	}
 
@@ -198,6 +208,19 @@ impl game_state {
 		}
 
 		return Ok
+	}
+
+	check_rows(&mut self) {
+
+		// iterate over the rows, find the ones, that are completely filled
+		// filled = row.iter().fold() -> returns true if filled
+
+		// if found a filled one
+		//   update the score
+		//   move the above rows down by copying the values, fill in blanks or sth like that
+
+		// continue
+
 	}
 
 
@@ -215,7 +238,7 @@ impl game_state {
 			empty? = !self.is_occupied(temp_coods);
 
 			if empty? {
-				self.active_block.runner(action());
+				self.active_block.runner_mut(action());
 				return Ok;
 			} else {
 				return Err
@@ -229,7 +252,9 @@ impl game_state {
 
 	move(dir: Direction) {
 		success = self.do_if_empty(|a| a.dry_move(dir), |b| b.move(dir));
-		if let Err = success { self.merge_block() } // if moving was unsuccessfull, a collision happened, so merge the block
+		if let Err = success { // if moving was unsuccessfull, a collision happened, so merge the block and update the score
+			self.merge_block();
+		}
 	}
 
 	is_occupied(blocks: [block; 4]) -> boolean {
