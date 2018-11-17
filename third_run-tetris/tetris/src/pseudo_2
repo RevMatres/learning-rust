@@ -83,19 +83,3 @@ impl game_state {
 	get_queue()
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
