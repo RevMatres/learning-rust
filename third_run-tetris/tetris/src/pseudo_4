@@ -1,0 +1,257 @@
+
+pub struct Buffer { 
+	Board: Box< [[Option<Color>; COLUMN_NUMBER]; ROW_NUMBER] >;
+}
+
+impl Buffer {
+	create(width, height) -> Buffer {
+		return Buffer { Board: new Box< [[None(); width]; height] > }
+	}
+}
+
+
+
+
+
+pub enum Event < General, Move_down, Move_left, Move_right, Rotate, Render >
+
+enum Orientation < Normal, Quarter, Half, ThreeQuarter >
+enum Direction < Left, Right, Down >
+
+pub struct Color = (f32, f32, f32);
+
+struct block { // a single block
+	x
+	y
+}
+
+
+pub enum Shape < shape_name(Color) >
+create_shape(Shape) -> [block; 4] {
+	match Shape {
+		... => return ...
+	}
+}
+choose_shape() -> Shape {
+
+	// generate a random number, that fits in the range of possible shapes
+	// make a decision and return that
+
+}
+
+
+
+struct game_block { // a full game block, made of its parts
+
+	// note: if a block has -1, -1 as position, the renderer shouldn't render it
+	x;
+	y;
+
+	blocks = [block; 4];
+
+	color: Color;
+
+	orientation: Orientation;
+
+}
+
+impl game_block {
+
+	create(shape: Shape, x, y) -> game_block {
+		let color = shape(color)
+
+		let blocks = create_shape(shape)
+
+		return game_block {
+			x, y,
+			color,
+			blocks,
+			orientation = Normal,
+		}
+	}
+
+	runner_mut<F>(&mut self, f: F) where F: Fn(&mut Self) {
+		f(self);
+	}
+
+	runner<F>(& self, f: F) where F: Fn(&Self) {
+		f(self);
+	}
+
+	dry_rotate(&self) -> [[i32; 2]; 4] {
+		// magic
+	}
+
+	dry_move(&self) -> [[i32; 2]; 4] {
+		// wizardry
+	}
+
+	rotate_for_real(&mut self) {
+		// rotate but mutate
+	}
+
+	move_for_real(&mut self, Direction) {
+		// move but like edit the thing
+	}
+
+	get_actual_positions(&self) -> [block; 4] {
+		return self.blocks.iter().map(|b| return [b.x+self.x, b.y+self.y]).collect();
+	}
+
+}
+
+
+
+
+
+struct game_state {
+
+	score;
+
+	time_stamp: Time; // time of last down motion
+	update_interval;
+
+	block_queue: Shape;
+	active_block: game_block;
+
+	board_buffer: Buffer;
+
+	render_buffer: arc<rwlock<Buffer>>.write();
+
+}
+
+impl game_state {
+
+	pub create( buffer_width, buffer_height, game_speed, render_buffer_reference ) -> game_state {
+
+		return game_state {
+			score = 0;
+
+			time_stamp = new Time::stamp(or whatever);
+			update_interval = game_speed;
+
+			block_queue = choose_shape();
+			active_block = game_block::create(choose_shape(), START_X, START_Y),
+
+			board_buffer = Buffer::create(buffer_width, buffer_height),
+
+			render_buffer = render_buffer_reference,
+		}
+		
+	}
+
+
+	pub get_score(&self) -> i32 {
+		return self.score;
+	}
+
+	pub get_next_block(&self) -> Shape {
+		return self.block_queue;
+	}
+		
+
+
+	/* Update functions */
+	// Err result means GAME_OVER
+
+
+	pub update(&self, e: Event ) -> Result {
+		match e {
+			General    => self.general_update()?,
+			Move_down  => self.event_update(Move_down)?,
+			Move_left  => self.event_update(Move_left)?,
+			Move_right => self.event_update(Move_right)?,
+			Rotate     => self.event_update(Rotate)?,
+			Render     => self.update_render_buffer()?,
+		}
+	}
+
+	update_render_buffer(&mut self) -> Result {
+
+		// options:
+		// - just plain copy the board_buffer and replace the render buffer with that
+		//    - possibly use the write trait to write the stuff as bytes?
+		// - compute the delta between the two and only exchange those values (as you go along)
+
+		return Ok
+
+	}
+
+	general_update(&mut self) -> Result {
+		
+		if self.game_over() { return Err(GAME_OVER) }
+
+		delta_time = (new Time) - self.time_stamp;
+		if delta_time > self.update_interval { self.move(Down) }
+		self.time_stamp = new Time;
+
+		return Ok
+	}
+
+	event_update(&mut self, e: Event) -> Result {
+
+		match e {
+			Rotate     => self.rotate(),
+			Move_down  => self.move(Down),
+			Move_left  => self.move(Left),
+			Move_right => self.move(Right),
+		}
+
+		return Ok
+	}
+
+
+
+	/* Event Action Functions */
+
+	// check if action() can be executed by first dry running it using dry_run()
+	// specifically: check if action() would affect spaces on the board, that
+	// are already occupied, by using dry_run() to first produce the coordinates
+	// active_block would have after applying action()
+	do_if_empty<F, G>(dry:F, action:G) -> Result where
+		F: Fn(&Self)
+		G: Fn(&mut Self) {
+			temp_coods = self.active_block.runner(dry);
+			empty? = !self.is_occupied(temp_coods);
+
+			if empty? {
+				self.active_block.runner(action());
+				return Ok;
+			} else {
+				return Err
+			}
+	}
+
+	rotate() {
+		success = self.do_if_empty(|a| a.dry_rotate(), |b| b.rotate());
+		// I'm not handling success, cause if the rotation fails, just nothing should happen.
+	}
+
+	move(dir: Direction) {
+		success = self.do_if_empty(|a| a.dry_move(dir), |b| b.move(dir));
+		if let Err = success { self.merge_block() } // if moving was unsuccessfull, a collision happened, so merge the block
+	}
+
+	is_occupied(blocks: [block; 4]) -> boolean {
+		for block in blocks.iter() {
+			if self.block_is_in_buffer(block) { return true }
+		}
+
+		return false
+	}
+
+	block_is_in_buffer(b: block) -> boolean {
+		if let Some(color) = Buffer[b.y][b.x] { return true }
+		return false
+	}
+
+
+
+
+	/* What to do when a collision happens */
+
+	merge_block() {
+		for block in self.active_block.get_actual_positions.iter() {
+			self.board_buffer[block.x, block.y] = Some(self.active_block.color);
+		}
+	}

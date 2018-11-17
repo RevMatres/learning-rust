@@ -1,3 +1,4 @@
+enum Direction
 
 struct Buffer {
 	// I want this heap allocated so it doesn't auto copy!
@@ -17,7 +18,10 @@ struct game_block {
 
 impl game_block {
 
-	turn operations
+	// return array of position values
+	dry_rotate -> [[x,y],[...]]
+
+	rotate()
 
 }
 
@@ -58,26 +62,54 @@ impl game_state {
 		// if game over: return Err(game_over)
 
 		// compute delta time
-		// run collision_checker with active_block's coordinates + 1
-		// if !collision update active_block's coordinates
-		// if collision merge_block() and active_block = block_queue and block_queue = new block
+		if time for motion
+			move(Down)
 
 		return OK('s fine)
 	}
 
-	update(enum Event) { /* update the active_block and board_buffer */ }
+	update(enum Event) {
+		/* update the active_block and board_buffer */
+
+		if Event<Rotate> then rotate(Direction)
+		if Event<Move<Direction>> then move(Direction)
+
+	}
+
+	rotate(Direction) {
+		temp_coordinates = active_block.dry_rotate(Direction)
+
+		// check whether any of the points would already exist
+		for each in temp_coordinates
+			is_in_buffer?
+	}
+
+	move(Direction) {
+		check collision in direction
+		if collision
+			merge_block()
+			active_block = block_queue
+			block_queue = new block
+		else if !collision
+			update active_block's coordinates
+	}
 
 	update_render_buffer() {
 		// decide whether to just copy the board_buffer or to actually compute a delta and update smartly...
 		// or: empty the box and actually replace the data inside the buffer → Write trait?
 	}
 
-	detect_collision(&active_block, &board_buffer) -> Boolean
+	detect_collision(&active_block, &board_buffer) -> Boolean {
+		is_in_buffer(active_block's coordinates + appropriate values)
+		[... repeat for all actual blocks in active_block]
+	}
+
+	// checks whether provided x and y coordinates already exist in a game buffer
+	is_in_buffer(takes coordinates to check) -> Boolean
 
 	merge_block(&mut active_block, &mut board_buffer) {
 		// copy each single_block into the board_buffer
 	}
-
 
 	get_score()
 	get_queue()

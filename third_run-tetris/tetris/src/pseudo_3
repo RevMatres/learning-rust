@@ -1,0 +1,132 @@
+
+struct Buffer {
+	Box<[[[The field.]]]>
+}
+
+
+enum Event < General, Move_down, Move_left, Move_right, Rotate >
+enum Direction < Left, Right, Down >
+
+struct Color = (f32, f32, f32);
+
+
+struct active_block {
+
+	x
+	y
+	color: Color
+	orientation
+
+}
+
+impl active_block {
+	runner<F>(&mut self, f: F) where F: Fn(&mut Self) {
+		f(self);
+	}
+
+	dry_rotate(&self) -> [[i32; 2]; 4] {
+		// magic
+	}
+
+	dry_move(&self) -> [[i32; 2]; 4] {
+		// wizardry
+	}
+
+	rotate_for_real(&mut self) {
+		// rotate but mutate
+	}
+
+	move_for_real(&mut self, Direction) {
+		// move but like edit the thing
+	}
+}
+
+	
+
+
+
+
+struct game_state:
+
+	time_stamp of last down motion
+
+	block_queue: game_block
+	active_block: game_block
+
+	board_buffer: Buffer
+
+	render_buffer: arc<rwlock<Buffer>>.write()
+
+
+struct game_state FUNCTIONS:
+
+	create( buffer_width, buffer_height, render_buffer_reference ) -> game_state { magic. }
+
+
+
+	update( enum Event E ) {
+		if E is some actual Event: event_update(Event)
+		if E is General: general_update()
+	}
+
+	general_update() -> Result< OK || Err(GAME_OVER) > {
+
+		if game_over() { return Err(GAME_OVER) }
+
+		delta_time = (new time) - time_stamp
+		if delta_time > UPDATE_INTERVAL { move(Down) }
+
+		return OK
+	}
+
+	event_update(Event) {
+		if Event is Rotate { rotate() }
+		if Event is Move_down  { move(Down) }
+		if Event is Move_left  { move(Left) }
+		if Event is Move_right { move(Right) }
+	}
+
+
+	mutate<F, G>(f:F, g:G) where
+		F: Fn(&Self)
+		G: Fn(&mut Self) {
+			temp_coordinates = active_block.runner(f); // which blocks to check
+			empty? = !is_occupied(temp_coordinates); // buffer space is empty if not occupied
+			if empty? { active_block.runner(g) } // if space is empty, move there
+	}
+		
+
+	rotate() {
+		mutate(|a| a.dry_rotate(), |b| b.rotate() );
+	}
+
+	move(Direction) {
+		mutate(|a| a.dry_move(Direction), |b| b.move(Direction) );
+	}
+
+
+	is_occupied(blocks: [[i32;2];4]) -> boolean {
+		return blocks.into_iter()
+			.fold(||{
+				if !block_is_in_buffer() { val = false }
+				else { val = true }
+			});
+	}
+
+	block_is_in_buffer([x,y]) -> boolean {
+		if let Some(value) = Buffer[y][x] { return true }
+		else { return false }
+	}
+
+	merge_block() {
+		// copy single blocks into the board_buffer
+	}
+
+	update_render_buffer() {
+		// decide whether to just copy the board_buffer or to actually compute a delta and update smartly...
+		// or: empty the box and actually replace the data inside the buffer → Write trait?
+	}
+
+	get_score()
+	get_next_block()
+
