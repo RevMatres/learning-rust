@@ -1,4 +1,18 @@
 
+// '->'        means the thing returns something
+//             the thing after the arrow is the return type (like in java functions the word before the name delcaration)
+// Result      signifies that an operation might fail, in which case in place of the result you'll get an Err (=error duh)
+//             if it doesn't fail you'll get an Ok
+// enum <...>  a thing that could be any of the things in <...>
+// 
+// And generally: this is the game logic, so no rendering and not even an execution loop.
+// Some external thing has to loop and call the update functions on the game_state structure, so the thing is always updated manually.
+// The game then provides a 'render buffer' which is a Buffer, that contains a color, where there is a block, and nothing where there isn't and it's a copy of the game_state's internal game buffer.
+// I use two buffers cause then the renderer can render even though an update is happening simoultaneously.
+// The rest should be basically self-explanatory... I hope ¯\_(ツ)_/¯
+
+
+// this is a buffer that contains a two dimensional array (of rows and columns in rows) on the heap
 pub struct Buffer { 
 	Board: Box< [[Option<Color>; COLUMN_NUMBER]; ROW_NUMBER] >;
 }
@@ -124,7 +138,7 @@ struct game_state {
 
 	board_buffer: Buffer;
 
-	render_buffer: arc<rwlock<Buffer>>.write();
+	render_buffer: arc<rwlock<Buffer>>.write(); // the render_buffer is read-write-locked so nothing on the outside can accidentally edit it
 
 }
 
