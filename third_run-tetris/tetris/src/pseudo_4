@@ -34,14 +34,16 @@ enum Direction < Left, Right, Down >
 
 pub struct Color = (f32, f32, f32);
 
-struct block { // a single block
+struct Block { // a single block
 	x
 	y
 }
 
+struct Blocks = [Block; 4];
+
 
 pub enum Shape < SHAPE_NAME(Color) >
-shape_to_blocks(Shape) -> [block; 4] {
+shape_to_blocks(Shape) -> Blocks {
 	match Shape {
 		... => return ...
 	}
@@ -61,7 +63,7 @@ struct game_block { // a full game block, made of its parts
 	x;
 	y;
 
-	blocks = [block; 4];
+	blocks = Blocks;
 
 	color: Color;
 
@@ -116,7 +118,7 @@ impl game_block {
 		}
 	}
 
-	get_actual_positions(&self) -> [block; 4] {
+	get_actual_positions(&self) -> Blocks {
 		return self.blocks.iter().map(|b| return [b.x+self.x, b.y+self.y]).collect();
 	}
 
@@ -271,7 +273,7 @@ impl game_state {
 		}
 	}
 
-	is_occupied(blocks: [block; 4]) -> boolean {
+	is_occupied(blocks: Blocks) -> boolean {
 		for block in blocks.iter() {
 			if self.block_is_in_buffer(block) { return true }
 		}
