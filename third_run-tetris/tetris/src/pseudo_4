@@ -228,6 +228,15 @@ impl game_state {
 
 	check_rows(&mut self) {
 
+		let full_removed = self.board_buffer.iter().filter(/*NOT FILLED*/).collect();
+
+		let lines_removed = self.board_buffer.len() - full_removed.len();
+		/* score based on removed lines */
+
+		// empty board_buffer
+
+		board_buffer = full_removed
+
 		// iterate over the rows, find the ones, that are completely filled
 		// filled = row.iter().fold() -> returns true if filled
 
