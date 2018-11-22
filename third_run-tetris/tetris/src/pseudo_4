@@ -228,24 +228,40 @@ impl game_state {
 
 	check_rows(&mut self) {
 
-		let full_removed = self.board_buffer.iter().filter(/*NOT FILLED*/).collect();
+		// number of full rows
+		full_rows = self.board_buffer.iter().filter( /* filled */ ).count();
 
-		let lines_removed = self.board_buffer.len() - full_removed.len();
-		/* score based on removed lines */
+		/* I'm guessing you could optimize this by either
+		 *  - replacing each to-be-changed row in the board using splice or replace
+		 *  - creating the new board and then prepending a number of empty lines, without
+		 *    creating a whole separate vector for them* I'm guessing you could optimize this by either
+		 *
+		 * Cause right now I'm using two full iterators just to get this one thing done.
+		 * With a little work I could probably also just update the parts of the board,
+		 * that actually need to change, which would probably be the most optimal...
+		 * I think I might think about doing that in the future, but first make this version,
+		 * cause it's such a neat way of doing it.
+		 */
 
-		// empty board_buffer
+		// If there are full rows, you have to do things
+		if full_rows > 0 {
 
-		board_buffer = full_removed
+			/* update score with full_rows HERE */
 
-		// iterate over the rows, find the ones, that are completely filled
-		// filled = row.iter().fold() -> returns true if filled
+			/* rebuild the board_buffer */
+			// create filler rows for the to-be-deleted rows
+			filler_rows = Vec::new();
+			for i in 0..full_rows {
+				filler_rows.push( /* empty row */ );
+			}
 
-		// if found a filled one
-		//   update the score
-		//   move the above rows down by copying the values, fill in blanks or sth like that
+			// rebuild the board_buffer without the filled rows
+			self.board_buffer = filler_rows.into_iter().chain(
+				self.board_buffer.into_iter()
+					.filter( /* only the not-filled rows */ )
+				).collect();
 
-		// continue
-
+		}
 	}
 
 
