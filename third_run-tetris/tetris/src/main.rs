@@ -5,6 +5,9 @@ use lib::*;
 fn main() {
     //honk();
 
+    honk();
+
+    /*
 
     // Lets make a vector with values yay
     let mut rows = vec!(1, 3, 4, 4, 3, 4, 5, 3, 7, 3, 9, 3);
@@ -37,4 +40,6 @@ fn main() {
 
     // Output
     print!("rows: "); rows.iter().for_each(|x| print!("{} ", x)); print!("\n");
+
+    */
 }

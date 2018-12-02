@@ -39,7 +39,7 @@ struct Block { // a single block
 	y
 }
 
-struct Blocks = [Block; 4];
+struct Blocks = (Block, Block, Block, Block);
 
 
 pub enum Shape < SHAPE_NAME(Color) >
@@ -63,6 +63,9 @@ struct game_block { // a full game block, made of its parts
 	x;
 	y;
 
+	// these blocks are relative offsets to the anchor point,
+	// so you just have to add their numbers onto the x and y
+	// up above to get the actual coordinates
 	blocks = Blocks;
 
 	color: Color;
@@ -94,17 +97,36 @@ impl game_block {
 		f(self);
 	}
 
-	dry_rotate(&self) -> [[i32; 2]; 4] {
+	dry_rotate(&self) -> Blocks {
 		// magic
 	}
 
-	dry_move(&self, dir: Direction) -> [[i32; 2]; 4] {
+	dry_move(&self, dir: Direction) -> Blocks {
 		match dir {
-			Left  => { return [ self.x - 1, self.y ] },
-			Right => { return [ self.x + 1, self.y ] },
-			Down  => { return [ self.x, self.y + 1 ] },
+			Left  => { return dry_move_manipulate(|b| b.x -= 1) },
+			Right => { return dry_move_manipulate(|b| b.x += 1) },
+			Down  => { return dry_move_manipulate(|b| b.y += 1) },
 		}
 	}
+
+	dry_move_manipulate<F>(&self, f: F) -> Blocks 
+		where F: FnMut(Block) {
+		
+		// copy the blocks from self and add the manipulations on it!
+		let mut temp_blocks = self.blocks.copy() // ? => how to use the copy trait?
+
+		// manipulate each of the blocks
+		for block in temp_blocks {
+
+			// turn relative coordinates to absolute coordinates
+			block.x += self.x;
+			block.y += self.y;
+
+			// manipulate x or y according to the event that occured (see caller)
+			f(block);
+		}
+	}
+
 
 	rotate_for_real(&mut self) {
 		// rotate but mutate

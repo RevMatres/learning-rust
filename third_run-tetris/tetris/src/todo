@@ -1,0 +1,13 @@
+
+
+
+
+Right.
+
+1. Try this: your closures use arguments to get the things they edit right now,
+   but since closures should be dynamically scoped, you should be able to get
+   around that entirely...?
+
+2. Try out the dry_move implementation
+    - how to make Blocks type thing in actuality?
+    - the functions and closure you wish to use!

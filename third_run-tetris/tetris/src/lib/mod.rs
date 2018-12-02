@@ -22,11 +22,12 @@ impl Honk {
 }
 
 pub fn honk() {
-    println!("Honk.");
-    renderer::render();
+    //println!("Honk.");
+    //renderer::render();
     game::game();
 
 
+    /*
     let mut Tonk = Honk { value: 33 };
     println!("Honk: {}", Tonk.value);
 
@@ -34,5 +35,6 @@ pub fn honk() {
     Tonk.runner(|a| a.value += 3);
 
     println!("Tonk: {}", Tonk.value);
+    */
 
 }
